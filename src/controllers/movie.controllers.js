@@ -6,7 +6,7 @@ export const getAllMovies = async (req, res) => {
     const movies = await Movie.findAll();
     res.status(200).json(movies);
   } catch (error) {
-    console.error('no se pudo obtenere las peliculas:', error);
+    console.error('No se pudo obtener las películas:', error.message);
     res.status(500).json({ message: 'Error del servidor.' });
   }
 };
@@ -17,13 +17,13 @@ export const getMovieById = async (req, res) => {
     const movie = await Movie.findByPk(id);
 
     if (!movie) {
-      return res.status(404).json({ message: 'pelicula no encontrada.' });
+      return res.status(404).json({ message: 'Película no encontrada.' });
     }
 
     res.status(200).json(movie);
   } catch (error) {
-    console.error(`no se pudo obtener la pelicula con id ${req.params.id}:`, error);
-    res.status(500).json({ message: 'error del servidor.' });
+    console.error(`No se pudo obtener la película con id ${req.params.id}:`, error.message);
+    res.status(500).json({ message: 'Error del servidor.' });
   }
 };
 
@@ -32,12 +32,12 @@ export const createMovie = async (req, res) => {
     const { title, director, duration, genre, description } = req.body;
 
     if (!title || !director || !duration || !genre) {
-      return res.status(400).json({ message: ' (title, director, duration, genre) son obligatorios.' });
+      return res.status(400).json({ message: '(title, director, duration, genre) son obligatorios.' });
     }
 
     const existingMovie = await Movie.findOne({ where: { title } });
     if (existingMovie) {
-      return res.status(409).json({ message: `Ya existe una peli con ese titulo: '${title}'.` });
+      return res.status(409).json({ message: `Ya existe una peli con ese título: '${title}'.` });
     }
 
     const newMovie = await Movie.create({
@@ -50,8 +50,8 @@ export const createMovie = async (req, res) => {
 
     res.status(201).json(newMovie);
   } catch (error) {
-    console.error('error al crear la pelicula:', error);
-    res.status(500).json({ message: 'error del servidor.' });
+    console.error('Error al crear la película:', error.message);
+    res.status(500).json({ message: 'Error del servidor.' });
   }
 };
 
@@ -62,9 +62,8 @@ export const updateMovie = async (req, res) => {
 
     const movie = await Movie.findByPk(id);
     if (!movie) {
-      return res.status(404).json({ message: 'no se encontro la pelicula.' });
+      return res.status(404).json({ message: 'No se encontró la película.' });
     }
-
 
     if (title && title !== movie.title) {
       const existingMovieWithNewTitle = await Movie.findOne({
@@ -88,7 +87,7 @@ export const updateMovie = async (req, res) => {
 
     res.status(200).json(movie);
   } catch (error) {
-    console.error(`Error al actualizar la película con ID ${req.params.id}:`, error);
+    console.error(`Error al actualizar la película con ID ${req.params.id}:`, error.message);
     res.status(500).json({ message: 'Error interno del servidor.' });
   }
 };
@@ -106,7 +105,7 @@ export const deleteMovie = async (req, res) => {
 
     res.status(204).send();
   } catch (error) {
-    console.error(`Error al eliminar la película con ID ${req.params.id}:`, error);
+    console.error(`Error al eliminar la película con ID ${req.params.id}:`, error.message);
     res.status(500).json({ message: 'Error interno del servidor.' });
   }
 };
